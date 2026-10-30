@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d1425"><title>SORTER — Sorting algorithms, visualized</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#e7ecf7;background:#0a1020;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 80% 0%,#182d50 0%,transparent 48%),#0a1020}
+main{width:min(1180px,calc(100% - 36px));margin:auto;padding:38px 0 54px}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}
+.brand{font-weight:900;letter-spacing:.18em;font-size:22px}.brand span{color:#6de5d8}.tag{border:1px solid #293c58;border-radius:99px;padding:8px 13px;color:#a3b7d1;font-size:12px}
+h1{font-size:clamp(29px,4vw,51px);margin:0 0 10px;letter-spacing:-.045em}p{color:#9baccc;line-height:1.6}.intro{margin:0 0 30px;max-width:670px}
+.panel{background:#101c30e8;border:1px solid #24334b;border-radius:19px;padding:24px;box-shadow:0 14px 36px #02081642}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:18px}
+.control label{display:block;color:#a5b5cf;font-size:12px;font-weight:700;margin-bottom:9px;letter-spacing:.05em;text-transform:uppercase}
+select,input[type=range]{width:100%;accent-color:#6de5d8}
+select{color:#e9f3ff;background:#172840;border:1px solid #334662;border-radius:10px;padding:12px;font-size:14px}
+.range-row{display:flex;justify-content:space-between;color:#d1e3fa;font-size:13px;margin-bottom:8px}
+input[type=range]{cursor:pointer}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}
+button{border:1px solid #334662;border-radius:10px;background:#1a2a43;color:#dfebff;cursor:pointer;font-weight:750;padding:11px 17px;font-size:14px}
+button:hover:not(:disabled){background:#2b4162}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #6de5d8;outline-offset:3px}
+button:disabled{opacity:.43;cursor:not-allowed}button.primary{border-color:#64decf;background:#6de5d8;color:#092a32}button.primary:hover:not(:disabled){background:#a0fff1}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 255px;gap:18px;margin-top:18px}
+.chart-wrap{min-width:0;display:flex;flex-direction:column}.chart-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.chart-top h2{font-size:15px;margin:0}.status{font-size:12px;color:#7ddfce}
+.chart{height:370px;display:flex;gap:2px;align-items:flex-end;border-bottom:1px solid #354961;padding:20px 0 0;overflow:hidden}
+.bar{flex:1;min-width:0;border-radius:3px 3px 0 0;background:linear-gradient(#71a3ff,#3e6ed3);transition:height .09s linear,background .09s linear}
+.bar.active{background:#ffce71}.bar.write{background:#f38dc3}.bar.sorted{background:#67ddaf}
+.legend{display:flex;gap:15px;flex-wrap:wrap;color:#9db0cc;font-size:12px;margin-top:17px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;background:#71a3ff}.dot.compare{background:#ffce71}.dot.write{background:#f38dc3}.dot.done{background:#67ddaf}
+.stats{display:grid;gap:11px}.stat{padding:18px;background:#17263c;border:1px solid #263854;border-radius:12px}
+.stat small{display:block;color:#95abc7;font-size:12px;margin-bottom:9px}.stat strong{font-size:29px;font-variant-numeric:tabular-nums}
+.desc{margin-top:18px}.desc h3{font-size:17px;margin:0 0 7px}.desc p{margin:0}.complexity{display:flex;gap:24px;margin-top:14px;color:#b9cbe5;font-size:13px;flex-wrap:wrap}
+footer{text-align:center;color:#7387a6;font-size:12px;margin-top:25px}
+@media(max-width:800px){.controls{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.stat strong{font-size:22px}}
+@media(max-width:470px){main{width:min(100% - 24px,1180px);padding-top:24px}.panel{padding:16px}.tag{display:none}.controls{grid-template-columns:1fr}.chart{height:280px}.stats{gap:6px}.stat{padding:10px}.stat strong{font-size:19px}.toolbar button{flex:1}}
+@media(prefers-reduced-motion:reduce){.bar{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="brand">SORT<span>ER</span><span style="color:#557091">.</span></div><span class="tag">INTERACTIVE CS LAB / 001</span></header>
+<h1>Algorithms in motion.</h1>
+<p class="intro">Explore how sorting works, one operation at a time. Choose an algorithm, tune your dataset, and watch the array organize itself.</p>
+<section class="panel" aria-label="Visualizer controls">
+<div class="controls">
+<div class="control"><label for="algorithm">Algorithm</label><select id="algorithm"><option value="bubble">Bubble sort</option><option value="selection">Selection sort</option><option value="insertion">Insertion sort</option><option value="merge">Merge sort</option><option value="quick">Quick sort</option></select></div>
+<div class="control"><label for="distribution">Dataset</label><select id="distribution"><option value="random">Random</option><option value="nearly">Nearly sorted</option><option value="reversed">Reversed</option><option value="duplicates">Many duplicates</option></select></div>
+<div class="control"><label for="size">Array size</label><div class="range-row"><span>8</span><output id="sizeOut">40</output><span>100</span></div><input id="size" type="range" min="8" max="100" value="40"></div>
+<div class="control"><label for="speed">Animation speed</label><div class="range-row"><span>Slow</span><output id="speedOut">55%</output><span>Fast</span></div><input id="speed" type="range" min="1" max="100" value="55"></div>
+</div>
+<div class="toolbar"><button id="start" class="primary">▶ Start sorting</button><button id="pause" disabled>⏸ Pause</button><button id="stop" disabled>■ Stop</button><button id="generate">↻ New array</button></div>
+</section>
+<div class="grid">
+<section class="panel chart-wrap" aria-label="Sorting visualization"><div class="chart-top"><h2>Array visualization</h2><output class="status" id="status" role="status" aria-live="polite">Ready to sort</output></div><div class="chart" id="chart" role="img" aria-label="Array of values represented as bars"></div><div class="legend"><span><i class="dot"></i>Unsorted</span><span><i class="dot compare"></i>Comparing</span><span><i class="dot write"></i>Writing</span><span><i class="dot done"></i>Sorted</span></div></section>
+<aside class="stats" aria-label="Statistics"><div class="stat"><small>Comparisons</small><strong id="comparisons">0</strong></div><div class="stat"><small>Array writes</small><strong id="writes">0</strong></div><div class="stat"><small>Elapsed time</small><strong id="elapsed">0.00s</strong></div></aside>
+</div>
+<section class="panel desc" aria-label="Algorithm explanation"><h3 id="algoTitle">Bubble sort</h3><p id="algoDesc"></p><div class="complexity"><span id="average"></span><span id="worst"></span></div></section>
+<footer>Built for learning · Plain JavaScript · No dependencies</footer>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body></html>
