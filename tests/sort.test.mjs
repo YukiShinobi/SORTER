@@ -44,3 +44,10 @@ test('reversed dataset is descending',()=>{
   const a=createData(25,'reversed',Math.random);
   assert.deepEqual(a,[...a].sort((x,y)=>y-x));
 });
+
+test('duplicate bars stay within range at maximum input',()=>{
+  assert.ok(createData(8,'duplicates',()=>0.99999).every(value=>value<=100));
+});
+test('empty nearly sorted data stays empty',()=>{
+  assert.deepEqual(createData(0,'nearly'),[]);
+});

@@ -13,7 +13,7 @@ An interactive, dependency-free sorting visualizer built with HTML, CSS and Java
 
 ## Run
 
-Open `index.html` in your browser, or serve locally:
+Serve the project locally so the browser can load its JavaScript modules:
 
 ```bash
 python -m http.server 8000

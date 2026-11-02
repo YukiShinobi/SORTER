@@ -14,7 +14,8 @@ function updateInfo(){
 function updateStats(){
  $('comparisons').textContent=comparisons.toLocaleString();
  $('writes').textContent=writes.toLocaleString();
- $('elapsed').textContent=(elapsed/1000).toFixed(2)+'s';
+ const totalElapsed=elapsed+(running && !paused ? performance.now()-activeAt : 0);
+ $('elapsed').textContent=(totalElapsed/1000).toFixed(2)+'s';
 }
 function render(indices=[],kind='',complete=false){
  const highlighted=new Set(indices);
@@ -68,6 +69,8 @@ async function run(){
      const delay=Math.max(1,Math.round(210*Math.pow((101-Number(speed.value))/100,2)));
      await sleep(delay);
    }
+   if(id!==runId)return;
+   while(paused && id===runId)await sleep(30);
    if(id!==runId)return;
    elapsed+=performance.now()-activeAt;running=false;paused=false;activeAt=0;
    $('status').textContent='Sorted successfully ✓';render([], '',true);updateStats();setControls();

@@ -82,9 +82,9 @@ export const info={
 };
 export function createData(n,distribution='random',random=Math.random){
   let a=Array.from({length:n},()=>Math.floor(random()*91)+10);
-  if(distribution==='duplicates')a=a.map(v=>10+Math.floor(v/20)*20);
+  if(distribution==='duplicates')a=a.map(v=>10+Math.floor((v-10)/20)*20);
   if(distribution==='reversed')a.sort((x,y)=>y-x);
-  if(distribution==='nearly'){
+  if(distribution==='nearly' && n>1){
     a.sort((x,y)=>x-y);
     for(let k=0;k<Math.max(1,Math.floor(n/12));k++){
       const i=Math.floor(random()*n),j=Math.floor(random()*n);
